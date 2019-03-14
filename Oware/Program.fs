@@ -1,8 +1,8 @@
 ﻿module Oware
 
 type StartingPosition =
-    | South
-    | North
+    | South of int
+    | North of int
     //The Discriminated Union of North and South. The representation of the two players.
 
 let getSeeds n board = failwith "Not implemented"
