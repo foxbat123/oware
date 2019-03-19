@@ -6,23 +6,6 @@ open System
 open System
 open System
 
-//Inital idea for board
-(*type house =
-    //South
-    | A of int //1
-    | B of int //2
-    | C of int //3
-    | D of int //4
-    | E of int //5
-    | F of int //6
-    //North
-    | A' of int //7
-    | B' of int //8
-    | C' of int //9
-    | D' of int //10
-    | E' of int //11
-    | F' of int //128 *)
-
 type board = {
     A : int
     B : int 
