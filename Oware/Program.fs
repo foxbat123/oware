@@ -1,22 +1,11 @@
 ﻿module Oware
 
 //Inital idea for board
-type house =
-    //South
-    | A of int //1
-    | B of int //2
-    | C of int //3
-    | D of int //4
-    | E of int //5
-    | F of int //6
-    //North
-    | A' of int //7
-    | B' of int //8
-    | C' of int //9
-    | D' of int //10
-    | E' of int //11
-    | F' of int //12
 
+type boardProto = {
+    seed : int
+    Number : int
+}
 (*Prototype:
         Board as a represenation is a tuple of type house (contains the name of the house and the 
         amount of seeds in that house)
@@ -43,17 +32,25 @@ type house =
  
 
 type StartingPosition =
-    | South of int
-    | North of int
+    | South
+    | North 
     //The Discriminated Union of North and South. The representation of the two players.
 
-let getSeeds n board = failwith "Not implemented"
+let getSeeds n board = 
+    let v = 
+    let temp = { House = n ; Number = v } 
+
+    match n with
+    |
     //Accepts a house number and a ​board​, and returns the number of  seeds in the specified house. 
 
 let useHouse n board = failwith "Not implemented"
     //Removes and sows the seeds from house n counterclockwise.
 
-let start position = failwith "Not implemented"
+let start position =     
+    {House = 4 ; Number = 1},{House = 4 ; Number = 2},{House = 4 ; Number = 3},{House = 4 ; Number = 4},
+    {House = 4 ; Number = 5},{House = 4 ; Number = 6},{House = 4 ; Number = 7},{House = 4 ; Number = 8},
+    {House = 4 ; Number = 9},{House = 4 ; Number = 10},{House = 4 ; Number = 11},{House = 4 ; Number = 12}
     //Sets up the board tuples for the start of the game. Output is the board (?)
 
 let score board = failwith "Not implemented"
