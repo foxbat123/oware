@@ -17,6 +17,9 @@ type house =
     | E' of int //11
     | F' of int //12
 
+
+
+
 (*Prototype:
         Board as a represenation is a tuple of type house (contains the name of the house and the 
         amount of seeds in that house)
@@ -53,7 +56,7 @@ let getSeeds n board = failwith "Not implemented"
 let useHouse n board = failwith "Not implemented"
     //Removes and sows the seeds from house n counterclockwise.
 
-let start position = failwith "Not implemented"
+let start position = A 4, B 4, C 4, D 4, E 4, F 4, A' 4, B' 4, C' 4, D' 4, E' 4, F' 4
     //Sets up the board tuples for the start of the game. Output is the board (?)
 
 let score board = failwith "Not implemented"
