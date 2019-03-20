@@ -4,7 +4,7 @@ open FsUnit
 
 let charOf = function
     | 1 -> 'A' | 2 -> 'B' | 3 -> 'C' | 4 -> 'D' | 5 -> 'E' | 6 -> 'F'
-    | 7 -> 'a' | 8 -> 'b' | 9 -> 'c' | 10 -> 'd' | 11 -> 'e' | 12 -> 'f'
+    | 7 -> 'a' | 8 -> 'b' | 9 -> 'c' | 10 -> 'd' | 11 -> 'e' | 12 -> 'f' | _ -> failwith "Fuck the police"
 
 let makeString = List.map (charOf >> string) >> String.concat ""
 
