@@ -70,8 +70,33 @@ let getSeeds n board =
     | _ -> failwith "Invalid house"
     //Accepts a house number and a ​board​, and returns the number of  seeds in the specified house. 
 
-let useHouse n board = failwith "Not implemented"
-    //Removes and sows the seeds from house n counterclockwise.
+
+let changeSeeds board n seeds =
+    match n with 
+    | 1 -> {board with A = seeds}
+    | 2 -> {board with B = seeds}
+    | 3 -> {board with C = seeds}
+    | 4 -> {board with D = seeds}
+    | 5 -> {board with E = seeds}
+    | 6 -> {board with F = seeds}
+    | 7 -> {board with a = seeds}
+    | 8 -> {board with b = seeds}
+    | 9 -> {board with c = seeds}
+    | 10 -> {board with d = seeds}
+    | 11 -> {board with e = seeds}
+    | 12 -> {board with f = seeds}
+    | _ -> failwith "Invalid house"
+
+let useHouse n board = 
+        let rec seedFun updatedBoard updatedStart seedCount =
+                match seedCount = 0 with
+                        |true -> updatedBoard
+                        |_ -> match updatedStart = 13 with
+                                |true -> seedFun (changeSeeds updatedBoard 1 ((getSeeds 1 updatedBoard)+1)) 2 (seedCount - 1)
+                                |_ -> seedFun (changeSeeds updatedBoard updatedStart ((getSeeds updatedStart updatedBoard)+1)) (updatedStart + 1) (seedCount - 1)
+        match (getSeeds n board) = 0 with
+            | true -> board
+            |_ -> seedFun (changeSeeds board n 0) (n + 1) (getSeeds n board)
 
 let start position = {A = 4; B = 4; C = 4; D = 4; E = 4; F = 4; a = 4; b = 4; c = 4; d = 4; e = 4; f = 4}
     //Sets up the board tuples for the start of the game. Output is the board (?) Position determines which player starts the game
