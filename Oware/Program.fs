@@ -91,9 +91,11 @@ let useHouse n board =
         let rec seedFun updatedBoard updatedStart seedCount =
                 match seedCount = 0 with
                         |true -> updatedBoard
-                        |_ -> match updatedStart = 13 with
-                                |true -> seedFun (changeSeeds updatedBoard 1 ((getSeeds 1 updatedBoard)+1)) 2 (seedCount - 1)
-                                |_ -> seedFun (changeSeeds updatedBoard updatedStart ((getSeeds updatedStart updatedBoard)+1)) (updatedStart + 1) (seedCount - 1)
+                        |_ -> match updatedStart = n with 
+                                |true -> seedFun updatedBoard (updatedStart + 1) seedCount
+                                |_ -> match updatedStart = 13 with
+                                        |true -> seedFun (changeSeeds updatedBoard 1 ((getSeeds 1 updatedBoard)+1)) 2 (seedCount - 1)
+                                        |_ -> seedFun (changeSeeds updatedBoard updatedStart ((getSeeds updatedStart updatedBoard)+1)) (updatedStart + 1) (seedCount - 1)
         match (getSeeds n board) = 0 with
             | true -> board
             |_ -> seedFun (changeSeeds board n 0) (n + 1) (getSeeds n board)
