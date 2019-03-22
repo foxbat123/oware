@@ -92,7 +92,7 @@ let useHouse n board =
             | true -> board
             |_ -> seedFun (changeSeeds board n 0) (n + 1) (getSeeds n board)
 
-let score board = failwith "Not implemented"
+let score board = board.SouthScore, board.NorthScore
     //Which accepts a ​board​ and gives back a tuple of (​southScore​ , ​northScore​)
 
 let gameState board = 
