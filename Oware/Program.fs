@@ -37,8 +37,8 @@ type board = { //Using records to represent the houses, the name of field indica
  
 
 type StartingPosition =
-    | South
-    | North
+    | South of int
+    | North of int
     //The Discriminated Union of North and South. The representation of the two players.
 
 let getSeeds n board = 
