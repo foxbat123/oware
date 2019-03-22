@@ -6,11 +6,6 @@ open System
 open System
 open System
 
-type board = { //Using records to represent the houses, the name of field indicates the number of the house and the 
-               //assoicated integer value is the number of seeds in that house
-    A : int; B : int; C : int; D : int; E : int; F : int; a : int; b : int; c : int; d : int; e : int; f : int
-}
-
 //type player 
 
 (*Prototype:
@@ -34,12 +29,17 @@ type board = { //Using records to represent the houses, the name of field indica
 
         Record the amount of wins for the current session of the program
 *)
- 
 
 type StartingPosition =
-    | South of int
-    | North of int
+    | South
+    | North
     //The Discriminated Union of North and South. The representation of the two players.
+
+type board = { //Using records to represent the houses, the name of field indicates the number of the house and the 
+               //assoicated integer value is the number of seeds in that house
+               //Holds the current score for both sides as well as who's turn it is currently
+    A : int; B : int; C : int; D : int; E : int; F : int; a : int; b : int; c : int; d : int; e : int; f : int;
+    SouthScore : int; NorthScore : int; Turn : StartingPosition }
 
 let getSeeds n board = 
     match n with
@@ -59,7 +59,9 @@ let getSeeds n board =
     //Accepts a house number and a ​board​, and returns the number of  seeds in the specified house. 
 
 let start position = 
-    {A = 4; B = 4; C = 4; D = 4; E = 4; F = 4; a = 4; b = 4; c = 4; d = 4; e = 4; f = 4}
+    //Accepts a starting postion and then initialisies the board record
+    {A = 4; B = 4; C = 4; D = 4; E = 4; F = 4; a = 4; b = 4; c = 4; d = 4; 
+    e = 4; f = 4; SouthScore = 0; NorthScore = 0; Turn = position}
 
 let changeSeeds board n seeds =
     match n with 
@@ -93,19 +95,28 @@ let useHouse n board =
 let score board = failwith "Not implemented"
     //Which accepts a ​board​ and gives back a tuple of (​southScore​ , ​northScore​)
 
-let gameState board = failwith "Not implemented"
-    //Determines whose turn it is.
+let gameState board = 
+    match board.Turn with
+    | North -> "North's turn"
+    | South -> "South's turn"
+    | _ -> failwith "Excuse me, what the fuck?"
+    //Returns whose turn it is.
+
+let playGame board = failwith "Not implemented"
         
 let capture board start = failwith "Not implemented"
 
 let drawBoard board = 
     (* let string = 
+            
+          "              %s              " board.Turn
           "|============{N}===========|\n"
         + "|==%i==%i==%i==%i==%i==%i==|\n" board.a, board.b, board.c, board.d, board.e, board.f
         + "|--------------------------|\n"
         + "|==%i==%i==%i==%i==%i==%i==|\n" board.A, board.B, board.C, board.D, board.E, board.F
         + "|============{S}===========|\n" *)
         failwith "Not done"
+
 [<EntryPoint>]
 let main _ =
     printfn "Hello from F#!"
