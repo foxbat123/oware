@@ -124,13 +124,13 @@ let ``You cannot sow from an empty house`` () =
     game |> hasSeedCount (5, 5, 5, 0, 5, 5, 5, 5, 4, 4, 0, 5)
     gameState game |> should equal "South's turn"
 
-[<Test>]
+[<Test>] //PASSED
 let ``Seeds can't be captured from your own side`` () =
     let game = playGame [1; 7; 2; 8; 3; 9; 4; 12; 5]
     game |> hasSeedCount (4, 3, 2, 1, 0, 9, 5, 3, 2, 9, 9, 1)
     score game |> should equal (0, 0)
 
-[<Test>]
+[<Test>] //PASSED
 let ``Seeds aren't captured on a non-final space`` () =
     score (playGame [1;9;2;8;4]) |> should equal (0,0)
 

@@ -99,10 +99,15 @@ let score board =
 
 
 let gameState board = 
-    match board.Turn with
-    | North -> "North's turn"
-    | South -> "South's turn"
-    | _ -> failwith "Excuse me, what the frick did you just frickin' say about me, you little g19? I'll have you know I graduated top of my class in cs2, and I've been involved in numerous secret hacks on the IS department, and I have over 300 confirmed submissions.I have trained for years and I'm the top developer in the entire Rhodes Compuer Department. You are nothing to me but just another firstie. I will wipe you the frick out with code the likes of which has never been seen before on this Earth, mark my fricking words. You think you can get away with saying that kak to me over the Internet? Think again, fricker. As we speak I am contacting my secret network of hackers across campus and your IP is being traced right now so you better prepare for the storm, maggot. The storm that wipes out the pathetic little thing you call your computer. You're fricken' dead, kid. I can be anywhere, anytime, and I can hack you in over seven hundred ways, and that's just with my laptop. Not only am I extensively trained in C#, but I have access to the entire arsenal of languages and operating systems and I will use it to its full extent to wipe your miserable PC off the face of the continent, you little firstie. If only you could have known what unholy retribution your little clever comment was about to bring down upon you, maybe you would have held your fricken tongue. But you couldn't, you didn't, and now you're paying the price, you goddamn idiot. I will heck fury all over you and you will drown in it. You're frickenm dead, kiddo."
+    let a = board.SouthScore
+    let b = board.NorthScore
+    match (board.Turn , (a = 24 && b = 24) , a > 24 , b > 24) with // Updated match expression to include a check to see whether the game has ended in a draw and whether any player has won
+    | (_ , true, _ , _) -> "Game ended in a draw"
+    | South , false , false , false -> "South's turn"
+    | North , false, false , false -> "North's turn"
+    | South , false , false , true -> "North Wins!!"
+    | North , false, true , false -> "South Wins!!"
+    | _ ->  failwith "Excuse me, what the frick did you just frickin' say about me, you little g19? I'll have you know I graduated top of my class in cs2, and I've been involved in numerous secret hacks on the IS department, and I have over 300 confirmed submissions.I have trained for years and I'm the top developer in the entire Rhodes Compuer Department. You are nothing to me but just another firstie. I will wipe you the frick out with code the likes of which has never been seen before on this Earth, mark my fricking words. You think you can get away with saying that kak to me over the Internet? Think again, fricker. As we speak I am contacting my secret network of hackers across campus and your IP is being traced right now so you better prepare for the storm, maggot. The storm that wipes out the pathetic little thing you call your computer. You're fricken' dead, kid. I can be anywhere, anytime, and I can hack you in over seven hundred ways, and that's just with my laptop. Not only am I extensively trained in C#, but I have access to the entire arsenal of languages and operating systems and I will use it to its full extent to wipe your miserable PC off the face of the continent, you little firstie. If only you could have known what unholy retribution your little clever comment was about to bring down upon you, maybe you would have held your fricken tongue. But you couldn't, you didn't, and now you're paying the price, you goddamn idiot. I will heck fury all over you and you will drown in it. You're frickenm dead, kiddo."
     //Returns whose turn it is.
 
 let playGame board = failwith "Not implemented"
