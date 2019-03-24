@@ -79,16 +79,40 @@ let changeSeeds board n seeds =
     | 12 -> {board with f = seeds}
     | _ -> failwith "Invalid house"
 
-let useHouse n board = 
-        let rec seedFun updatedBoard updatedStart seedCount =
-                match seedCount = 0 with
-                        |true -> updatedBoard
-                        |_ -> match updatedStart = n with 
-                                |true -> seedFun updatedBoard (updatedStart + 1) seedCount
-                                |_ -> match updatedStart = 13 with
+let houseOwner house = 
+        match house <=6 with 
+         |true -> South 
+         |false -> North 
+
+let capture board start = // This is going to be called within the useHouse function 
+    let rec capturing updatedBoard updatedStart = // recursive function calls updatedBoard and updatedStart
+        match updatedStart = 0 with  // This is the wrap around case
+        |true -> capturing updatedBoard 12 // set updatedStart to 12 if it reaches 0
+        |false ->  match ((getSeeds updatedStart updatedBoard) > 3 ||getSeeds updatedStart updatedBoard <2 || (houseOwner updatedStart) = board.Turn) with
+                   |true -> updatedBoard
+                   |false -> let updatedBoard = match board.Turn with 
+                                                | North -> {updatedBoard with NorthScore = updatedBoard.NorthScore + (getSeeds updatedStart updatedBoard)}
+                                                | South -> {updatedBoard with SouthScore = updatedBoard.SouthScore + (getSeeds updatedStart updatedBoard)}
+                             capturing (changeSeeds updatedBoard updatedStart 0) (start - 1)
+    let updatedBoard = capturing board start
+    match updatedBoard.Turn with
+    |North -> {updatedBoard with board.Turn = South}
+    |South ->{updatedBoard with board.Turn = North}
+
+
+let useHouse n board = // n is a house position on the board
+        let rec seedFun updatedBoard updatedStart seedCount = // RYAN DID THIS!!
+                match seedCount = 0 with 
+                        |true -> match updatedStart with
+                                 |13 -> capture updatedBoard 1
+                                 |_ ->  capture updatedBoard updatedStart// Base case when seedCount has 0 seeds
+                        |_ -> match updatedStart = n, updatedStart = 12 with 
+                                |true,false -> seedFun updatedBoard (updatedStart + 1) seedCount
+                                |true, true -> seedFun updatedBoard (1) seedCount
+                                |_ -> match updatedStart = 13 with // Wrap around logic. Goes back to 1 when house number reaches 13
                                         |true -> seedFun (changeSeeds updatedBoard 1 ((getSeeds 1 updatedBoard)+1)) 2 (seedCount - 1)
                                         |_ -> seedFun (changeSeeds updatedBoard updatedStart ((getSeeds updatedStart updatedBoard)+1)) (updatedStart + 1) (seedCount - 1)
-        match (getSeeds n board) = 0 with
+        match (getSeeds n board) = 0 with // Returns board as is if house n has no seeds
             | true -> board
             |_ -> seedFun (changeSeeds board n 0) (n + 1) (getSeeds n board)
 
@@ -112,7 +136,8 @@ let gameState board =
 
 let playGame board = failwith "Not implemented"
         
-let capture board start = failwith "Not implemented"
+
+
 
 let drawBoard board = 
     (* let string = 

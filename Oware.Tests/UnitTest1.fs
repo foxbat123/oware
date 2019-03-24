@@ -104,7 +104,7 @@ let ``The specified player goes first`` () =
     gameState (start South) |> should equal "South's turn"
     gameState (start North) |> should equal "North's turn"
 
-[<Test>]
+[<Test>] //PASSED
 let ``The player turns alternate`` () =
     let game = start South
     gameState game |> should equal "South's turn"
@@ -141,10 +141,11 @@ let ``Contiguous captured seeds are taken`` () =
     score game |> should equal (5, 0)
     gameState game |> should equal "North's turn"
 
-[<Test>] //PASSED
+[<Test>] 
 let ``The original house is skipped when sowing seeds`` () =
     let game = playGame [1; 7; 2; 9; 3; 10; 1; 11; 2; 9; 4; 7; 5; 12; 3; 11; 6]
     game |> hasSeedCount (6, 4, 1, 3, 3, 0, 5, 12, 6, 5, 1, 2)
+
 
 [<Test>]
 let ``Non-contiguous captured seeds are not taken`` () =
