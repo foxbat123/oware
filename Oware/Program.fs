@@ -116,10 +116,7 @@ let useHouse n board = // n is a house position on the board
             | true -> board
             |_ -> seedFun (changeSeeds board n 0) (n + 1) (getSeeds n board)
 
-let score board =
-    let z = board //Binding z to input 
-    let {SouthScore = SS ; NorthScore = NS} = z //Bind SouthScore and NorthScore values to SS and NS respectivly 
-    (SS , NS) //Return a tuple of SS and NS
+let score board =(board.SouthScore, board.NorthScore)
 
 
 let gameState board = 
