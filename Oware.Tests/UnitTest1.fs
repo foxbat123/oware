@@ -29,67 +29,67 @@ let playGame numbers =
         | x::xs -> play xs (useHouse x game)
     play numbers (start South)
 
-[<Test>]
+[<Test>] //PASSED
 let ``Every house has 4 seeds in it at the start`` () =
     let initial = start South
     initial |> hasSeedCount (4,4,4,4,4,4,4,4,4,4,4,4)
 
-[<Test>]
+[<Test>] //PASSED
 let ``When house 1 is used, seeds go to the other houses`` () =
     let board = start South |> useHouse 1
     board |> hasSeedCount (0,5,5,5,5,4,4,4,4,4,4,4)
 
-[<Test>]
+[<Test>] //PASSED
 let ``When house 2 is used, seeds go to the other houses`` () =
     let board = start South |> useHouse 2
     board |> hasSeedCount (4,0,5,5,5,5,4,4,4,4,4,4)
 
-[<Test>]
+[<Test>] //PASSED
 let ``When house 3 is used, seeds go to the other houses`` () =
     let board = start South |> useHouse 3
     board |> hasSeedCount (4,4,0,5,5,5,5,4,4,4,4,4)
 
-[<Test>]
+[<Test>] //PASSED
 let ``When house 4 is used, seeds go to the other houses`` () =
     let board = start South |> useHouse 4
     board |> hasSeedCount (4,4,4,0,5,5,5,5,4,4,4,4)
 
-[<Test>]
+[<Test>] //PASSED
 let ``When house 5 is used, seeds go to the other houses`` () =
     let board = start South |> useHouse 5
     board |> hasSeedCount (4,4,4,4,0,5,5,5,5,4,4,4)
 
-[<Test>]
+[<Test>] //PASSED
 let ``When house 6 is used, seeds go to the other houses`` () =
     let board = start South |> useHouse 6
     board |> hasSeedCount (4,4,4,4,4,0,5,5,5,5,4,4)
 
-[<Test>]
+[<Test>] //PASSED
 let ``When house 7 is used, seeds go to the other houses`` () =
     let board = start North |> useHouse 7
     board |> hasSeedCount (4,4,4,4,4,4,0,5,5,5,5,4)
 
-[<Test>]
+[<Test>] //PASSED
 let ``When house 8 is used, seeds go to the other houses`` () =
     let board = start North |> useHouse 8
     board |> hasSeedCount (4,4,4,4,4,4,4,0,5,5,5,5)
 
-[<Test>]
+[<Test>] //PASSED
 let ``When house 9 is used, seeds go to the other houses`` () =
     let board = start North |> useHouse 9
     board |> hasSeedCount (5,4,4,4,4,4,4,4,0,5,5,5)
 
-[<Test>]
+[<Test>] //PASSED
 let ``When house 10 is used, seeds go to the other houses`` () =
     let board = start North |> useHouse 10
     board |> hasSeedCount (5,5,4,4,4,4,4,4,4,0,5,5)
 
-[<Test>]
+[<Test>] //PASSED
 let ``When house 11 is used, seeds go to the other houses`` () =
     let board = start North |> useHouse 11
     board |> hasSeedCount (5,5,5,4,4,4,4,4,4,4,0,5)
 
-[<Test>]
+[<Test>] //PASSED
 let ``When house 12 is used, seeds go to the other houses`` () =
     let board = start North |> useHouse 12
     board |> hasSeedCount (5,5,5,5,4,4,4,4,4,4,4,0)
@@ -99,12 +99,12 @@ let ``Seeds are captured when there are 2 or 3 of them`` () =
     score (playGame [4;7;5;8;2]) |> should equal (2,0)
     score (playGame [4;7;5;8;2;11]) |> should equal (2,4)
 
-[<Test>]
+[<Test>] //PASSED
 let ``The specified player goes first`` () =
     gameState (start South) |> should equal "South's turn"
     gameState (start North) |> should equal "North's turn"
 
-[<Test>]
+[<Test>] //PASSED
 let ``The player turns alternate`` () =
     let game = start South
     gameState game |> should equal "South's turn"
@@ -118,19 +118,19 @@ let ``A player cannot manipulate their opponent's houses`` () =
     let game = start North in
         useHouse 1 game |> should equal game
 
-[<Test>]
+[<Test>] //PASSED
 let ``You cannot sow from an empty house`` () =
     let game = playGame [4; 11; 4]
     game |> hasSeedCount (5, 5, 5, 0, 5, 5, 5, 5, 4, 4, 0, 5)
     gameState game |> should equal "South's turn"
 
-[<Test>]
+[<Test>] //PASSED
 let ``Seeds can't be captured from your own side`` () =
     let game = playGame [1; 7; 2; 8; 3; 9; 4; 12; 5]
     game |> hasSeedCount (4, 3, 2, 1, 0, 9, 5, 3, 2, 9, 9, 1)
     score game |> should equal (0, 0)
 
-[<Test>]
+[<Test>] //PASSED
 let ``Seeds aren't captured on a non-final space`` () =
     score (playGame [1;9;2;8;4]) |> should equal (0,0)
 
@@ -141,10 +141,11 @@ let ``Contiguous captured seeds are taken`` () =
     score game |> should equal (5, 0)
     gameState game |> should equal "North's turn"
 
-[<Test>]
+[<Test>] 
 let ``The original house is skipped when sowing seeds`` () =
     let game = playGame [1; 7; 2; 9; 3; 10; 1; 11; 2; 9; 4; 7; 5; 12; 3; 11; 6]
     game |> hasSeedCount (6, 4, 1, 3, 3, 0, 5, 12, 6, 5, 1, 2)
+
 
 [<Test>]
 let ``Non-contiguous captured seeds are not taken`` () =
