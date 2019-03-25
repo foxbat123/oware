@@ -76,6 +76,26 @@ let changeSeeds board n seeds =
     | 12 -> {board with f = seeds}
     | _ -> failwith "Invalid house"
 
+
+let checkBoard board = //This function contains the recursive function to check whether the move made will result in all the opponent losing all their seeds
+    let rec checkZero updatedBoard acc updatedStart= //The definition of this recursive function takes in a board, an accumulator and a house number (as updatedStart)
+        match updatedBoard.Turn with // We match the board with the player whose turn it is
+        |North -> match updatedStart with // if its Norths' turn then we want to check Souths' board. 
+                  |7 -> acc // When updatedStart reaches 7 we know we have checked every house on Souths' board, therefore we can return the accumulator
+                  |_ -> checkZero updatedBoard (acc + getSeeds updatedStart updatedBoard) (updatedStart + 1) // Otherwise we simply call checkZero again, add the amount of seeds in the house we're currently looking at and then increment the updateStart integer.
+        |South -> match updatedStart with
+                  |13 -> acc
+                  |_ -> checkZero updatedBoard (acc + getSeeds updatedStart updatedBoard) (updatedStart + 1)
+    
+    match board.Turn with //this match statement checks whose turn it is.
+    |North -> match checkZero board 0 1 with // if it's Norths' turn then we pass it house number one, as this is the first house it will check. We want to check Souths' board after all
+              |0 ->true // if checkZero returns 0 then we know that the acccumulated amount of seeds is zero. This means that the move is illegal as you cannot leave your opponent with zero seeds
+              |_->false // if there is any other amount of seeds then the move is fine.
+    |South -> match checkZero board 0 7 with
+              |0 ->true
+              |_ ->false
+
+         
 let houseOwner house = 
         match house <=6 with 
          |true -> South 
