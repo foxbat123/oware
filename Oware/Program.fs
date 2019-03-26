@@ -113,10 +113,13 @@ let capture board start = // This is going to be called within the useHouse func
                                                 | South -> {updatedBoard with SouthScore = updatedBoard.SouthScore + (getSeeds updatedStart updatedBoard)}
                              capturing (changeSeeds newBoard updatedStart 0) (updatedStart - 1)
     let returnBoard = capturing board start // calling the recursive function for the first time
-    match returnBoard.Turn with //This changes the turn
-    |North -> {returnBoard with board.Turn = South}
-    |South ->{returnBoard with board.Turn = North}
-
+    match checkBoard returnBoard with
+    |true -> match board.Turn with
+             |North -> {board with board.Turn = South}
+             |South ->{board with board.Turn = North}
+    |false -> match returnBoard.Turn with //This changes the turn
+              |North -> {returnBoard with board.Turn = South}
+              |South ->{returnBoard with board.Turn = North}
 
 
 
