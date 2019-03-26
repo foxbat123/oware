@@ -76,6 +76,15 @@ let changeSeeds board n seeds =
     | 12 -> {board with f = seeds}
     | _ -> failwith "Invalid house"
 
+let checkDraw board = //This function exists to check whether there are NO seeds left in ANY houses. We use it in checkBoard to avoid it telling us a turn is illegal when it results in a draw
+    let rec calculateDraw updatedBoard acc updatedStart =
+        match updatedStart with 
+        |13 -> acc
+        |_ -> calculateDraw updatedBoard (acc + getSeeds updatedStart updatedBoard) (updatedStart + 1)
+    
+    match calculateDraw board 0 1 with 
+    |0 -> true
+    |_ -> false
 
 let checkBoard board = //This function contains the recursive function to check whether the move made will result in all the opponent losing all their seeds
     let rec checkZero updatedBoard acc updatedStart= //The definition of this recursive function takes in a board, an accumulator and a house number (as updatedStart)
@@ -87,13 +96,17 @@ let checkBoard board = //This function contains the recursive function to check 
                   |13 -> acc
                   |_ -> checkZero updatedBoard (acc + getSeeds updatedStart updatedBoard) (updatedStart + 1)
     
-    match board.Turn with //this match statement checks whose turn it is.
-    |North -> match checkZero board 0 1 with // if it's Norths' turn then we pass it house number one, as this is the first house it will check. We want to check Souths' board after all
-              |0 ->true // if checkZero returns 0 then we know that the acccumulated amount of seeds is zero. This means that the move is illegal as you cannot leave your opponent with zero seeds
-              |_->false // if there is any other amount of seeds then the move is fine.
-    |South -> match checkZero board 0 7 with
-              |0 ->true
-              |_ ->false
+
+    match checkDraw board with //if checkDraw returns true the turn is legal as it results in a draw. Else the turn is illegal.
+    |true -> false
+    |false -> match board.Turn with //this match statement checks whose turn it is.
+              |North -> match checkZero board 0 1 with // if it's Norths' turn then we pass it house number one, as this is the first house it will check. We want to check Souths' board after all
+                        |0 ->true // if checkZero returns 0 then we know that the acccumulated amount of seeds is zero. This means that the move is illegal as you cannot leave your opponent with zero seeds
+                        |_->false // if there is any other amount of seeds then the move is fine.
+              |South -> match checkZero board 0 7 with
+                        |0 ->true
+                        |_ ->false
+   
 
          
 let houseOwner house = 
