@@ -143,40 +143,46 @@ let gameState board =
 let input () = Console.ReadLine()
 
 
-let output s = printfn(s)
+let output str =
+    let drawBoard board =
+         printfn "             %A             " board.Turn.ToString
+         printfn "|============{N}===========|"
+         printfn "|==%i==%i==%i==%i==%i==%i==|" board.A board.B board.C board.D board.E board.F
+         printfn "|--------------------------|"
+         printfn "|==%i==%i==%i==%i==%i==%i==|" board.a board.b board.c board.d board.e board.f
+         printfn "|============{S}===========|"
 
+    match str with
+    | "Board" -> drawBoard
 
-let playGame board = 
+    match str with
+    | s -> printfn "%s" s
+
+let playGame () = 
     output "Welcome to Oware!"
     output "Who will be starting the game? [North/South]"
-    let board = match input () with //Generates board
-            | "North" -> start North
-            | "South" -> start South
-            | _ -> failwith "wat"
+    let gameBoard = match input () with //Generates board
+                | "North" -> start North
+                | "South" -> start South
+                | _ -> failwith "Invalid postition"
 
 
-    let rec playing a = 
-        output " " //Print board
+    let rec playing gameBoard = 
+        output "Board" //Print board
 
-        match gameState board with 
-        | "Game ended in a draw" -> output "Game ended in a draw"
-        | "North won" -> output "North won"
-        | "South won" -> output "South won"
-        | "North's turn" | "South's turn" -> playing (useHouse Int32.Parse(input ()) board)   
+        match gameState gameBoard with 
+        | "North's turn" | "South's turn" -> output "Board"
+                                             output "Please pick a house to sow from"
+                                             let num = int(input ())
+                                             playing (useHouse num gameBoard)  
+        | str -> output str
                                              
         //in this case call, grab an input and call the use house function
-    playing board
+    playing gameBoard
+    output "Game Over!"
 
-
-//DrawBoard :
-         (*printfn("             %s             " board.Turn)
-           printfn("|============{N}===========|") 
-           printfn("|==%i==%i==%i==%i==%i==%i==|" board.A board.B board.C board.D board.E board.F)
-           printfn("|--------------------------|")
-           printfn("|==%i==%i==%i==%i==%i==%i==|" board.a board.b board.c board.d board.e board.f)
-           printfn("|============{S}===========|") *)
 
 [<EntryPoint>]
 let main _ =
-    playGame board
+    playGame ()
     0 // return an integer exit code.
