@@ -2,30 +2,7 @@
 module Oware
 
 open System
-open System
-open System
-open System
-open System
 
-//type player 
-
-(*Prototype:
-        Board as a represenation is a record (contains the name of the house and the 
-        amount of seeds in that house)
-        Seperate seeding and capture function
-            Both functions need to be recursive 
-        Can't capture from own house
-
-
-
-        Where to store the score?
-        Win state is if one side has 25+ seeds
-            Check for draws as well
-        How to check if move is legal
-            If a move leaves the opponent with no seeds in their houses
-            Capture is illegal if opponent would be left with no seeds on their side
-        Record the amount of wins for the current session of the program
-*)
 
 type StartingPosition =
     | South
@@ -86,7 +63,7 @@ let checkDraw board = //This function exists to check whether there are NO seeds
     |0 -> true
     |_ -> false
 
-let checkBoard board = //This function contains the recursive function to check whether the move made will result in all the opponent losing all their seeds
+let playerCantMove board = //This function contains the recursive function to check whether the move made will result in all the opponent losing all their seeds
     let rec checkZero updatedBoard acc updatedStart= //The definition of this recursive function takes in a board, an accumulator and a house number (as updatedStart)
         match updatedBoard.Turn with // We match the board with the player whose turn it is
         |North -> match updatedStart with // if its Norths' turn then we want to check Souths' board. 
@@ -94,8 +71,7 @@ let checkBoard board = //This function contains the recursive function to check 
                   |_ -> checkZero updatedBoard (acc + getSeeds updatedStart updatedBoard) (updatedStart + 1) // Otherwise we simply call checkZero again, add the amount of seeds in the house we're currently looking at and then increment the updateStart integer.
         |South -> match updatedStart with
                   |13 -> acc
-                  |_ -> checkZero updatedBoard (acc + getSeeds updatedStart updatedBoard) (updatedStart + 1)
-    
+                  |_ -> checkZero updatedBoard (acc + getSeeds updatedStart updatedBoard) (updatedStart + 1)   
 
     match checkDraw board with //if checkDraw returns true the turn is legal as it results in a draw. Else the turn is illegal.
     |true -> false
@@ -107,8 +83,6 @@ let checkBoard board = //This function contains the recursive function to check 
                         |0 ->true
                         |_ ->false
    
-
-         
 let houseOwner house = 
         match house <=6 with 
          |true -> South 
@@ -126,8 +100,10 @@ let capture board start = // This is going to be called within the useHouse func
                                                 | South -> {updatedBoard with SouthScore = updatedBoard.SouthScore + (getSeeds updatedStart updatedBoard)}
                              capturing (changeSeeds newBoard updatedStart 0) (updatedStart - 1)
     let returnBoard = capturing board start // calling the recursive function for the first time
-    match checkBoard returnBoard with
-    |true -> match board.Turn with
+
+
+    match playerCantMove returnBoard with //Checking if the move leaves the oppenent with zero seeds or not
+    |true -> match board.Turn with  
              |North -> {board with board.Turn = South}
              |South ->{board with board.Turn = North}
     |false -> match returnBoard.Turn with //This changes the turn
@@ -135,15 +111,26 @@ let capture board start = // This is going to be called within the useHouse func
               |South ->{returnBoard with board.Turn = North}
 
 
-
+let changeTurn board = 
+    let updatedBoard= board
+    match board.Turn with
+    |North -> {updatedBoard with Turn = South}
+    |South -> {updatedBoard with Turn = North}
 
 let useHouse n board = // n is a house position on the board
+        let initialCheck = playerCantMove board
+        
         let rec seedFun updatedBoard updatedStart seedCount = // RYAN DID THIS!!
 
                 match seedCount = 0 with 
-                        |true -> match updatedStart with
-                                 |13 -> capture updatedBoard 12 // decrement the house to look at the house where the last seed was sown
-                                 |_ ->  capture updatedBoard (updatedStart - 1)// Base case when seedCount has 0 seeds - need to decrement the house
+                        |true ->   match playerCantMove updatedBoard with //Checking if the move leaves the oppenent with zero seeds or not
+                                   |true -> match board.Turn with  
+                                            |North -> board
+                                            |South -> board
+                                   |false -> match updatedStart with
+                                    //check whether board being passed to capture is in fact a legal board, if not, pass the board in its original form, if legal, pass changed board.
+                                             |13 -> capture updatedBoard 12 // decrement the house to look at the house where the last seed was sown
+                                             |_ ->  capture updatedBoard (updatedStart - 1)// Base case when seedCount has 0 seeds - need to decrement the house                              
                         |_ -> match updatedStart = n, updatedStart = 13 with 
                                 |true,false -> seedFun updatedBoard (updatedStart + 1) seedCount
                                 |true, true -> seedFun updatedBoard (1) seedCount
@@ -155,7 +142,11 @@ let useHouse n board = // n is a house position on the board
         match (getSeeds n board) = 0 with // Returns board as is if house n has no seeds
             | true -> board
             |_ -> match (n < 7) && board.Turn = South || (n > 6) && board.Turn = North with // the test to check that you do not manipulate your opponent's board
-                        | true -> seedFun (changeSeeds board n 0) (n + 1) (getSeeds n board)
+                        | true -> let newBoard = seedFun (changeSeeds board n 0) (n + 1) (getSeeds n board)
+                                  let finalCheck = playerCantMove newBoard
+                                  match initialCheck && finalCheck with
+                                  |true ->   board
+                                  |false ->  newBoard
                         | false -> board
             
             
